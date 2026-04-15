@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Iván Aguilar – Men's Clinic</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
+.app{display:flex;min-height:100vh;}
+.sidebar{width:220px;background:#1e3a6e;color:#fff;padding:20px 0;flex-shrink:0;display:flex;flex-direction:column;}
+.sidebar-logo{padding:0 16px 16px;border-bottom:1px solid rgba(255,255,255,0.15);text-align:center;}
+.sidebar-logo p{font-size:10px;opacity:.65;margin-top:4px;line-height:1.5;}
+.sidebar nav{padding:12px 0;flex:1;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 16px;cursor:pointer;font-size:12px;border-left:3px solid transparent;transition:background .15s;}
+.nav-item:hover{background:rgba(255,255,255,.08);}
+.nav-item.active{background:rgba(255,255,255,.13);border-left-color:#5bb8f5;}
+.main{flex:1;overflow:auto;}
+.topbar{background:#fff;border-bottom:1px solid #dde3ee;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.topbar h1{font-size:15px;font-weight:700;color:#1e3a6e;}
+.lang-toggle{display:flex;gap:5px;}
+.lang-btn{padding:4px 12px;border:1px solid #1e3a6e;border-radius:20px;background:transparent;cursor:pointer;font-size:11px;font-weight:700;color:#1e3a6e;}
+.lang-btn.active{background:#1e3a6e;color:#fff;}
+.content{padding:20px;max-width:860px;margin:0 auto;}
+.fx-row{display:flex;align-items:center;gap:10px;background:#f0f7ff;border:1px solid #b3d4f0;border-radius:6px;padding:8px 14px;margin-bottom:14px;font-size:12px;color:#1e3a6e;flex-wrap:wrap;}
+.fx-row label{font-weight:700;white-space:nowrap;}
+.fx-row input{width:80px;padding:4px 8px;border:1px solid #b3d4f0;border-radius:5px;font-size:13px;font-weight:700;color:#1e3a6e;background:#fff;}
+.fx-row span{color:#5a7090;font-size:11px;}
+.form-section{background:#fff;border:1px solid #dde3ee;border-radius:8px;padding:18px;margin-bottom:16px;}
+.form-section h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#1e3a6e;margin-bottom:14px;padding-bottom:7px;border-bottom:2px solid #e0ecfa;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-group{display:flex;flex-direction:column;gap:3px;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#5a7090;}
+.form-group input,.form-group select,.form-group textarea{padding:7px 9px;border:1px solid #c8d6e8;border-radius:6px;font-size:13px;font-family:Arial,sans-serif;background:#f7fafd;width:100%;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#5bb8f5;background:#fff;}
+.form-group textarea{resize:vertical;min-height:60px;}
+.price-selector{display:flex;gap:8px;margin-bottom:10px;align-items:flex-end;flex-wrap:wrap;}
+.price-selector select{flex:1;min-width:200px;padding:7px 9px;border:1px solid #c8d6e8;border-radius:6px;font-size:13px;background:#f7fafd;}
+.price-selector input{width:65px;padding:7px 9px;border:1px solid #c8d6e8;border-radius:6px;font-size:13px;background:#f7fafd;}
+.add-item-btn{background:#1e3a6e;color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;}
+.add-item-btn:hover{background:#16305c;}
+.items-table{width:100%;border-collapse:collapse;margin-bottom:8px;}
+.items-table th{background:#e0ecfa;color:#1e3a6e;font-size:10px;font-weight:700;text-transform:uppercase;padding:7px 9px;text-align:left;}
+.items-table td{padding:5px 7px;border-bottom:1px solid #eef2f8;vertical-align:middle;font-size:13px;}
+.items-table input{border:none;background:transparent;width:100%;font-size:13px;padding:2px 3px;}
+.items-table input:focus{outline:1px solid #5bb8f5;border-radius:3px;background:#fff;}
+.remove-btn{background:none;border:none;color:#e53935;cursor:pointer;font-size:17px;line-height:1;}
+.total-row{display:flex;justify-content:flex-end;margin-top:8px;gap:8px;flex-wrap:wrap;}
+.total-box{background:#1e3a6e;color:#fff;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:700;}
+.total-box.mn{background:#5bb8f5;color:#0d2a50;}
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.btn-primary{background:#1e3a6e;color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;}
+.btn-primary:hover{background:#16305c;}
+.btn-secondary{background:#fff;color:#1e3a6e;border:1px solid #1e3a6e;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;}
+.btn-secondary:hover{background:#e0ecfa;}
+/* MODAL */
+.preview-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;}
+.preview-wrap.open{display:flex;}
+.preview-box{background:#fff;border-radius:8px;width:100%;max-width:720px;margin:auto;}
+.preview-header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid #dde3ee;position:sticky;top:0;background:#fff;border-radius:8px 8px 0 0;z-index:1;}
+.preview-header h3{font-size:13px;font-weight:700;color:#1e3a6e;}
+.close-btn{background:none;border:none;font-size:20px;cursor:pointer;color:#888;}
+.preview-doc{padding:28px 36px;}
+/* DOC */
+.doc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;padding-bottom:14px;border-bottom:3px solid #1e3a6e;}
+.doc-logo svg{width:150px;height:auto;}
+.doc-meta-right{text-align:right;}
+.doc-type-badge{display:inline-block;background:#1e3a6e;color:#fff;padding:5px 14px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;margin-bottom:5px;}
+.doc-subtitle{font-size:9px;color:#5a7090;line-height:1.6;}
+.doc-meta{display:grid;grid-template-columns:1fr 1fr;gap:5px 18px;margin-bottom:16px;background:#f7fafd;padding:11px;border-radius:6px;border:1px solid #dde3ee;}
+.doc-meta-item{display:flex;flex-direction:column;}
+.doc-meta-item span:first-child{font-size:9px;font-weight:700;text-transform:uppercase;color:#90a8c0;letter-spacing:.3px;}
+.doc-meta-item span:last-child{font-size:12px;color:#222;font-weight:500;margin-top:1px;}
+.doc-table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+.doc-table th{background:#1e3a6e;color:#fff;font-size:9px;font-weight:700;text-transform:uppercase;padding:7px 10px;text-align:left;}
+.doc-table td{padding:7px 10px;border-bottom:1px solid #eef2f8;font-size:11px;}
+.doc-table tr:last-child td{border-bottom:none;}
+.doc-totals{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.doc-total-box{padding:7px 14px;border-radius:6px;font-size:13px;font-weight:700;text-align:right;min-width:180px;}
+.doc-total-box.usd{background:#1e3a6e;color:#fff;}
+.doc-total-box.mn{background:#5bb8f5;color:#0d2a50;}
+.doc-note{background:#fff8e1;border-left:4px solid #f9a825;padding:9px 13px;font-size:10px;color:#555;line-height:1.65;margin-top:13px;border-radius:0 4px 4px 0;}
+.doc-footer{margin-top:18px;padding-top:11px;border-top:1px solid #dde3ee;display:flex;justify-content:space-between;align-items:flex-end;}
+.doc-footer-left p{font-size:10px;color:#5a7090;line-height:1.7;}
+.doc-footer-right{text-align:right;}
+.doc-footer-right strong{font-size:12px;color:#1e3a6e;display:block;}
+.doc-footer-right p{font-size:10px;color:#aaa;}
+.zelle-box{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;padding:8px 12px;margin-top:9px;font-size:11px;color:#2e7d32;}
+.santander-box{background:#fff0f0;border:1px solid #f5b8b8;border-radius:6px;padding:10px 13px;margin-top:9px;font-size:11px;color:#7a1010;}
+.santander-box strong{font-size:12px;color:#b91c1c;display:block;margin-bottom:5px;}
+.santander-grid{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:11px;}
+.santander-grid span:nth-child(odd){color:#999;font-weight:700;text-transform:uppercase;font-size:9px;}
+.payment-summary{background:#f7fafd;border:1px solid #dde3ee;border-radius:6px;padding:11px;margin-top:9px;}
+.payment-row{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;}
+.payment-row.due{font-weight:700;color:#c62828;border-top:1px solid #dde3ee;padding-top:6px;margin-top:3px;font-size:13px;}
+.coordinator-box{background:#e8f4fb;border:1px solid #b3d4ec;border-radius:6px;padding:10px 13px;margin-top:9px;font-size:11px;color:#1e3a6e;}
+.clinic-bar{background:#e0ecfa;border-radius:6px;padding:5px 10px;margin-top:11px;font-size:9px;color:#1e3a6e;text-align:center;font-weight:700;letter-spacing:.3px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 210 130" xmlns="http://www.w3.org/2000/svg" style="width:110px;height:auto;margin-bottom:4px;">
+        <circle cx="66" cy="74" r="38" fill="none" stroke="#5bb8f5" stroke-width="13"/>
+        <line x1="94" y1="44" x2="128" y2="10" stroke="#5bb8f5" stroke-width="11" stroke-linecap="round"/>
+        <line x1="113" y1="10" x2="128" y2="10" stroke="#5bb8f5" stroke-width="9" stroke-linecap="round"/>
+        <line x1="128" y1="10" x2="128" y2="27" stroke="#5bb8f5" stroke-width="9" stroke-linecap="round"/>
+        <circle cx="66" cy="74" r="11" fill="#1e3a6e"/>
+        <text x="142" y="58" font-family="Arial" font-weight="700" font-size="21" fill="#5bb8f5">Men's</text>
+        <text x="142" y="80" font-family="Arial" font-weight="700" font-size="21" fill="#5bb8f5">Clinic</text>
+        <text x="142" y="98" font-family="Arial" font-size="12" fill="#1e3a6e">Dr. Iván Aguilar</text>
+      </svg>
+      <p>Cirujano Urólogo<br>Urólogo Estético · Uroginecología</p>
+    </div>
+    <nav>
+      <div class="nav-item active" onclick="showTab('desgloce')" id="nav-desgloce"><span>📋</span><span id="nl-d">Desgloce</span></div>
+      <div class="nav-item" onclick="showTab('cotizacion')" id="nav-cotizacion"><span>💲</span><span id="nl-c">Cotización</span></div>
+      <div class="nav-item" onclick="showTab('recibo')" id="nav-recibo"><span>🧾</span><span id="nl-r">Recibo</span></div>
+      <div class="nav-item" onclick="showTab('admission')" id="nav-admission"><span>📄</span><span id="nl-a">Admission Sheet</span></div>
+    </nav>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="topbar-title">Desgloce de Tratamiento</h1>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('es')">ES</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- FX ROW — only shown in ES -->
+      <div class="fx-row" id="fx-row">
+        <label>Tipo de cambio del día:</label>
+        <span>$1 USD =</span>
+        <input type="number" id="fx-rate" value="17.43" step="0.01" min="1" oninput="refreshTotals()">
+        <span>MXN &nbsp;·&nbsp; Fuente: Bloomberg / Interbancario · <span id="fx-date"></span></span>
+      </div>
+
+      <!-- PATIENT + CLINIC -->
+      <div class="form-section">
+        <h3 id="s-patinfo">Información del Paciente</h3>
+        <div class="form-grid">
+          <div class="form-group"><label id="s-patient">Nombre del Paciente</label><input type="text" id="patient-name" placeholder="Ej. Juan Carlos Lamazares"></div>
+          <div class="form-group"><label id="s-date">Fecha</label><input type="date" id="doc-date"></div>
+          <div class="form-group"><label id="s-city">Ciudad</label>
+            <select id="doc-city" onchange="updateClinicOptions()">
+              <option>Tijuana</option><option>Ciudad Juárez</option><option>Guadalajara</option><option>Culiacán</option>
+            </select>
+          </div>
+          <div class="form-group"><label id="s-clinic">Clínica / Hospital</label><select id="doc-clinic"></select></div>
+        </div>
+      </div>
+
+      <!-- TAB DESGLOCE -->
+      <div id="tab-desgloce">
+        <div class="form-section">
+          <h3 id="s-items-d">Conceptos del Tratamiento</h3>
+          <div id="picker-d"></div>
+          <table class="items-table">
+            <thead><tr><th id="s-desc-d">Descripción</th><th id="s-qty-d">Cant.</th><th>USD</th><th id="s-mn-d" class="mn-col">MXN</th><th></th></tr></thead>
+            <tbody id="tbody-d"></tbody>
+          </table>
+          <div class="total-row">
+            <div class="total-box" id="total-d-usd">Total: $0.00 USD</div>
+            <div class="total-box mn mn-col" id="total-d-mn">$0.00 MXN</div>
+          </div>
+        </div>
+        <div class="form-section">
+          <h3 id="s-dates">Próximas Fechas</h3>
+          <div class="form-group"><label id="s-dates-lbl">Fechas disponibles</label><input type="text" id="upcoming-dates" placeholder="Ej. Mayo 7, 13 y 14 2026"></div>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" onclick="previewDoc('desgloce')">👁 <span id="s-prev-d">Vista previa</span></button>
+          <button class="btn-primary" onclick="previewDoc('desgloce')" style="background:#0f766e;">🖨 <span id="s-pdf-d">Generar PDF</span></button>
+        </div>
+      </div>
+
+      <!-- TAB COTIZACION -->
+      <div id="tab-cotizacion" style="display:none">
+        <div class="form-section">
+          <h3 id="s-items-c">Conceptos de la Cotización</h3>
+          <div id="picker-c"></div>
+          <table class="items-table">
+            <thead><tr><th id="s-desc-c">Descripción</th><th id="s-qty-c">Cant.</th><th>USD</th><th id="s-mn-c" class="mn-col">MXN</th><th></th></tr></thead>
+            <tbody id="tbody-c"></tbody>
+          </table>
+          <div class="total-row">
+            <div class="total-box" id="total-c-usd">Total: $0.00 USD</div>
+            <div class="total-box mn mn-col" id="total-c-mn">$0.00 MXN</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" onclick="previewDoc('cotizacion')">👁 <span id="s-prev-c">Vista previa</span></button>
+          <button class="btn-primary" onclick="previewDoc('cotizacion')" style="background:#0f766e;">🖨 <span id="s-pdf-c">Generar PDF</span></button>
+        </div>
+      </div>
+
+      <!-- TAB RECIBO -->
+      <div id="tab-recibo" style="display:none">
+        <div class="form-section">
+          <h3 id="s-payinfo">Información de Pago</h3>
+          <div class="form-grid">
+            <div class="form-group"><label id="s-dep">Depósito recibido (USD)</label><input type="number" id="deposit-amount" placeholder="500" oninput="calcDue()"></div>
+            <div class="form-group"><label id="s-method">Método de pago</label>
+              <select id="payment-method"><option>Zelle</option><option>Transferencia / Wire</option><option>Efectivo / Cash</option><option>Tarjeta / Card</option><option>Santander</option></select>
+            </div>
+            <div class="form-group"><label id="s-totproc">Costo total procedimiento (USD)</label><input type="number" id="total-proc" placeholder="1250" oninput="calcDue()"></div>
+            <div class="form-group"><label id="s-due">Saldo pendiente (USD)</label><input type="text" id="due-amount" readonly style="background:#f0f4f8;"></div>
+            <div class="form-group full"><label id="s-concept">Concepto</label><input type="text" id="payment-concept" placeholder="Ej. Depósito para procedimiento"></div>
+            <div class="form-group full"><label id="s-procr">Procedimiento</label><textarea id="procedure-recibo" placeholder="Ej. 10 CCs Hyaluronic acid"></textarea></div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" onclick="previewDoc('recibo')">👁 <span id="s-prev-r">Vista previa</span></button>
+          <button class="btn-primary" onclick="previewDoc('recibo')" style="background:#0f766e;">🖨 <span id="s-pdf-r">Generar PDF</span></button>
+        </div>
+      </div>
+
+      <!-- TAB ADMISSION -->
+      <div id="tab-admission" style="display:none">
+        <div class="form-section">
+          <h3 id="s-surginfo">Información de Cirugía</h3>
+          <div class="form-grid">
+            <div class="form-group"><label id="s-surgdate">Fecha de cirugía</label><input type="date" id="surgery-date"></div>
+            <div class="form-group"><label id="s-checkin">Check-in</label><input type="time" id="checkin-time"></div>
+            <div class="form-group full"><label id="s-proca">Procedimiento</label><input type="text" id="procedure-admission" placeholder="Ej. Men Shot 10 cc"></div>
+            <div class="form-group"><label id="s-coord">Coordinadora</label><input type="text" id="coordinator-name" value="Marla Luna"></div>
+            <div class="form-group"><label id="s-coordtel">Teléfono coordinadora</label><input type="text" id="coordinator-tel" value="+1 (619) 576-7219"></div>
+            <div class="form-group full"><label id="s-coordemail">Email coordinadora</label><input type="text" id="coordinator-email" value="ceo@linkcaremedicalgroup.com"></div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-primary" onclick="previewDoc('admission')">👁 <span id="s-prev-a">Vista previa</span></button>
+          <button class="btn-primary" onclick="previewDoc('admission')" style="background:#0f766e;">🖨 <span id="s-pdf-a">Generar PDF</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="preview-wrap" id="preview-modal">
+  <div class="preview-box">
+    <div class="preview-header">
+      <h3 id="modal-title">Vista Previa</h3>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn-primary" id="modal-pdf-btn" onclick="exportPDF(currentTab)" style="padding:5px 12px;font-size:11px;background:#0f766e;">⬇ PDF</button>
+        <button class="close-btn" onclick="closePreview()">✕</button>
+      </div>
+    </div>
+    <div class="preview-doc" id="preview-content"></div>
+  </div>
+</div>
+
+
+
+<script>
+let lang='es', currentTab='desgloce';
+
+const PRICES=[
+  {es:'Peniflex',en:'Peniflex',p:6000},
+  {es:'Injerto de grasa dérmica (Dermar Fat Graft)',en:'Dermar Fat Graft',p:6400},
+  {es:'Liberación de ligamento con reconstrucción',en:'Penis Ligament Release with Reconstruction',p:3500},
+  {es:'Liposucción y transferencia de grasa al pene',en:'Liposuction and Fat Transfer to Penis',p:4500},
+  {es:'Liposucción + grasa al pene + Plasma Rico en Plaquetas',en:'Liposuction + Fat Transfer + Platelet Rich Plasma',p:5500},
+  {es:'Fillers 10 CC (Ácido Hialurónico)',en:'Fillers 10 CC (Hyaluronic Acid)',p:1250},
+  {es:'Fillers 20 CC (Ácido Hialurónico)',en:'Fillers 20 CC (Hyaluronic Acid)',p:2330},
+  {es:'Fillers 30 CC (Ácido Hialurónico)',en:'Fillers 30 CC (Hyaluronic Acid)',p:3030},
+  {es:'Circuncisión',en:'Circumcision',p:2600},
+  {es:'Pellets de Testosterona',en:'Testosterone Pellets',p:900},
+  {es:'Implante Maleable',en:'Malleable Implant',p:9500},
+  {es:'Filler Glande',en:'Glans Filler',p:990},
+  {es:'P-Shot',en:'P-Shot',p:1200},
+  {es:'B-Shot',en:'B-Shot',p:1200},
+  {es:'Botox para Disfunción Eréctil',en:'Botox for ED',p:1200},
+  {es:'Exosomas',en:'Exosomes',p:1600},
+  {es:'PMMA 20 CC',en:'PMMA 20 CC',p:3000},
+  {es:'PMMA 30 CC',en:'PMMA 30 CC',p:3600},
+  {es:'Neurectomía (Cirugía eyaculación precoz)',en:'Neurectomy (Premature Ejaculation Surgery)',p:4400},
+  {es:'Traslado redondo USA–Tijuana + pase médico',en:'Round Trip Transfer USA–Tijuana + Medical Pass',p:250},
+  {es:'Laboratorios y Electrocardiograma (EKG)',en:'Lab Work & Electrocardiogram (EKG)',p:225},
+  {es:'Noche en Zen & Health Recovery Home',en:'Night at Zen & Health Recovery Home (per night)',p:190},
+];
+
+const CLINICS={
+  'Tijuana':[
+    {name:'Vare Surgical Center',address:'Blvd. Agua Caliente 4558 Piso C2, Local A, Aviación, 22014, Tijuana BC',phone:'+52 663 160 0000'},
+    {name:'Central Toreo',address:'Blvd. Agua Caliente 9955 Col-Planta Baja 01, Calete, 22044 Tijuana, B.C.',phone:'664 819 8569'}
+  ],
+  'Ciudad Juárez':[{name:'Por confirmar – Ciudad Juárez',address:'Ciudad Juárez, Chihuahua',phone:''}],
+  'Guadalajara':[{name:'CHG Hospitales',address:'Calle de la Nebulosa 2956, Jardines del Bosque, 44520 Guadalajara, Jal.',phone:''}],
+  'Culiacán':[{name:'Hospital Ángeles Culiacán',address:'Blvrd Alfonso G. Calderón 2139, Country Álamos, 80107 Culiacán Rosales, Sin.',phone:''}]
+};
+
+const L={
+  es:{
+    tabs:{desgloce:'Desgloce de Tratamiento',cotizacion:'Cotización',recibo:'Recibo de Pago',admission:'Admission Sheet'},
+    nav:{d:'Desgloce',c:'Cotización',r:'Recibo',a:'Admission Sheet'},
+    patinfo:'Información del Paciente',patient:'Nombre del Paciente',date:'Fecha',city:'Ciudad',clinic:'Clínica / Hospital',
+    itemsd:'Conceptos del Tratamiento',itemsc:'Conceptos de la Cotización',
+    desc:'Descripción',qty:'Cant.',
+    dates:'Próximas Fechas',datesLbl:'Fechas disponibles',
+    payinfo:'Información de Pago',dep:'Depósito recibido (USD)',method:'Método de pago',
+    totproc:'Costo total procedimiento (USD)',due:'Saldo pendiente (USD)',concept:'Concepto',procr:'Procedimiento',
+    surginfo:'Información de Cirugía',surgdate:'Fecha de cirugía',checkin:'Check-in',proca:'Procedimiento',
+    coord:'Coordinadora',coordtel:'Teléfono coordinadora',coordemail:'Email coordinadora',
+    preview:'Vista previa',pdf:'Descargar PDF',selectProd:'— Seleccionar producto —',addBtn:'Agregar',
+    badge:{desgloce:'DESGLOCE DE TRATAMIENTO',cotizacion:'COTIZACIÓN',recibo:'RECIBO DE PAGO',admission:'ADMISSION SHEET'},
+    totalInv:'Total Inversión',procCost:'Costo del Procedimiento',amtRec:'Monto Recibido',
+    balDue:'Saldo Pendiente',payMethod:'Método de Pago',payConcept:'Concepto',
+    depositNote:'El depósito de su cita NO es reembolsable. En su recibo se indica el plazo para concertar la fecha de su intervención. Si ya tiene una fecha fijada, puede cambiarla con 15 días hábiles de antelación para concertar una nueva cita. Solo es posible cambiar la fecha de su intervención una vez.',
+    depositMsg:'Se requiere un depósito de $500 Dlls para agendar el procedimiento.',
+    surgeon:'Cirujano Urólogo · Urólogo Estético',sub:'Sub especialidad Uroginecología',
+    member:'Member American Urological Association',dgp:'D.G.P. 2775015  CED. ESP. 4512118',
+    hospital:'Hospital',address:'Dirección',phone:'Teléfono',surgDate:'Fecha de Cirugía',
+    checkIn:'Check-in',procedure:'Procedimiento',coordinator:'Coordinador(a)',
+    contactMsg:'Para cualquier pregunta o duda, comuníquese con su coordinadora:',
+    tel:'Tel.',email:'E-mail',
+    footAddr:'Vaquita 12520, 20 de Noviembre, 22100 Tijuana, B.C.',
+    footWa:'Tel / WhatsApp: +1 (619) 628-6259',
+    tcLabel:'Tipo de cambio:',
+  },
+  en:{
+    tabs:{desgloce:'Treatment Breakdown',cotizacion:'Quote',recibo:'Payment Receipt',admission:'Admission Sheet'},
+    nav:{d:'Breakdown',c:'Quote',r:'Receipt',a:'Admission Sheet'},
+    patinfo:'Patient Information',patient:'Patient Name',date:'Date',city:'City',clinic:'Clinic / Hospital',
+    itemsd:'Treatment Items',itemsc:'Quote Items',
+    desc:'Description',qty:'Qty.',
+    dates:'Upcoming Dates',datesLbl:'Available dates',
+    payinfo:'Payment Information',dep:'Deposit received (USD)',method:'Payment method',
+    totproc:'Total procedure cost (USD)',due:'Balance due (USD)',concept:'Concept',procr:'Procedure',
+    surginfo:'Surgery Information',surgdate:'Surgery date',checkin:'Check-in time',proca:'Procedure',
+    coord:'Coordinator',coordtel:'Coordinator phone',coordemail:'Coordinator email',
+    preview:'Preview',pdf:'Download PDF',selectProd:'— Select product —',addBtn:'Add',
+    badge:{desgloce:'TREATMENT BREAKDOWN',cotizacion:'QUOTE',recibo:'PAYMENT RECEIPT',admission:'ADMISSION SHEET'},
+    totalInv:'Total Investment',procCost:'Procedure Cost',amtRec:'Amount Received',
+    balDue:'Balance Due',payMethod:'Payment Method',payConcept:'Concept',
+    depositNote:"Your reservation deposit is NOT refundable. You have a period specified on your receipt to schedule the date for your procedure. If you already have a scheduled date, you can change the date 15 business days in advance to reschedule a new date. It's only possible to reschedule your procedure once.",
+    depositMsg:'A deposit of $500 USD is required to schedule your procedure.',
+    surgeon:'Urologic Surgeon · Aesthetic Urologist',sub:'Subspecialty: Urogynecology',
+    member:'Member American Urological Association',dgp:'D.G.P. 2775015  CED. ESP. 4512118',
+    hospital:'Hospital',address:'Address',phone:'Phone',surgDate:'Surgery Date',
+    checkIn:'Check-in',procedure:'Procedure',coordinator:'Coordinator',
+    contactMsg:'For any question or concern, please contact your coordinator:',
+    tel:'Tel.',email:'E-mail',
+    footAddr:'Vaquita 12520, 20 de Noviembre, 22100 Tijuana, B.C.',
+    footWa:'Tel / WhatsApp: +1 (619) 628-6259',
+    tcLabel:'Exchange rate:',
+  }
+};
+
+function t(k){const ks=k.split('.');let o=L[lang];for(const kk of ks)o=o&&o[kk];return o||k;}
+function fx(){return parseFloat(document.getElementById('fx-rate').value)||17.43;}
+function fmt(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtMN(n){return (n*fx()).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function pn(p){return lang==='es'?p.es:p.en;}
+
+// Show/hide MXN columns
+function toggleMN(){
+  const show=lang==='es';
+  document.querySelectorAll('.mn-col').forEach(el=>el.style.display=show?'':'none');
+  document.getElementById('fx-row').style.display=show?'':'none';
+}
+
+let items={d:[],c:[]},nid=0;
+
+function buildPicker(sid){
+  const wrap=document.getElementById('picker-'+sid);
+  wrap.innerHTML=`<div class="price-selector">
+    <select id="sel-${sid}">
+      <option value="">${t('selectProd')}</option>
+      ${PRICES.map((p,i)=>`<option value="${i}">${pn(p)} — $${fmt(p.p)}</option>`).join('')}
+    </select>
+    <input type="number" id="qty-${sid}" value="1" min="1" style="width:65px">
+    <button class="add-item-btn" onclick="addFromPicker('${sid}')">${t('addBtn')}</button>
+  </div>`;
+}
+
+function addFromPicker(sid){
+  const sel=document.getElementById('sel-'+sid);
+  const qty=parseInt(document.getElementById('qty-'+sid).value)||1;
+  const idx=sel.value;if(idx==='')return;
+  const p=PRICES[parseInt(idx)];
+  items[sid].push({id:nid++,desc:pn(p),qty,price:p.p});
+  renderItems(sid);sel.value='';document.getElementById('qty-'+sid).value=1;
+}
+
+function renderItems(sid){
+  const tbody=document.getElementById('tbody-'+sid);
+  const showMN=lang==='es';
+  tbody.innerHTML='';
+  items[sid].forEach(item=>{
+    const sub=(item.qty||1)*(parseFloat(item.price)||0);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><input type="text" value="${item.desc.replace(/"/g,'&quot;')}" oninput="upd('${sid}',${item.id},'desc',this.value)" style="min-width:170px"></td>
+      <td style="width:50px"><input type="number" value="${item.qty}" min="1" oninput="upd('${sid}',${item.id},'qty',this.value)" style="text-align:center;width:46px"></td>
+      <td style="width:100px"><input type="number" value="${item.price}" oninput="upd('${sid}',${item.id},'price',this.value)" style="text-align:right;width:96px"></td>
+      <td class="mn-col" style="width:105px;color:#0a6ebd;font-weight:600;font-size:12px;text-align:right;display:${showMN?'':'none'}">${fmtMN(sub)}</td>
+      <td style="width:26px"><button class="remove-btn" onclick="remItem('${sid}',${item.id})">×</button></td>`;
+    tbody.appendChild(tr);
+  });
+  calcTotal(sid);
+}
+
+function upd(sid,id,field,val){
+  const it=items[sid].find(i=>i.id===id);
+  if(it){it[field]=field==='desc'?val:(parseFloat(val)||0);renderItems(sid);}
+}
+function remItem(sid,id){items[sid]=items[sid].filter(i=>i.id!==id);renderItems(sid);}
+
+function calcTotal(sid){
+  const tot=items[sid].reduce((s,i)=>s+(i.qty||1)*(parseFloat(i.price)||0),0);
+  document.getElementById('total-'+sid+'-usd').textContent=t('totalInv')+': $'+fmt(tot)+' USD';
+  const mnEl=document.getElementById('total-'+sid+'-mn');
+  mnEl.textContent='$'+fmtMN(tot)+' MXN';
+  mnEl.style.display=lang==='es'?'':'none';
+  return tot;
+}
+function getTotal(sid){return items[sid].reduce((s,i)=>s+(i.qty||1)*(parseFloat(i.price)||0),0);}
+function refreshTotals(){if(items.d.length)renderItems('d');if(items.c.length)renderItems('c');}
+
+function calcDue(){
+  const tot=parseFloat(document.getElementById('total-proc').value)||0;
+  const dep=parseFloat(document.getElementById('deposit-amount').value)||0;
+  document.getElementById('due-amount').value='$'+fmt(Math.max(0,tot-dep));
+}
+
+function updateClinicOptions(){
+  const city=document.getElementById('doc-city').value;
+  const sel=document.getElementById('doc-clinic');
+  sel.innerHTML='';
+  (CLINICS[city]||[]).forEach(c=>{
+    const o=document.createElement('option');
+    o.value=JSON.stringify(c);o.textContent=c.name;sel.appendChild(o);
+  });
+}
+function getClinic(){try{return JSON.parse(document.getElementById('doc-clinic').value);}catch(e){return{name:'',address:'',phone:''};}}
+
+function fmtDate(d){
+  if(!d)return'';const[y,m,day]=d.split('-');
+  const ME=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const MS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  return `${parseInt(day)} ${(lang==='es'?MS:ME)[parseInt(m)-1]} ${y}`;
+}
+function fmtTime(v){
+  if(!v)return'';const[h,m]=v.split(':');const hh=parseInt(h);
+  return `${hh>12?hh-12:(hh||12)}:${m} ${hh>=12?'pm':'am'}`;
+}
+
+const LOGO_SVG=`<svg viewBox="0 0 210 130" xmlns="http://www.w3.org/2000/svg" style="width:155px;height:auto;">
+  <circle cx="66" cy="74" r="38" fill="none" stroke="#5bb8f5" stroke-width="13"/>
+  <line x1="94" y1="44" x2="128" y2="10" stroke="#5bb8f5" stroke-width="11" stroke-linecap="round"/>
+  <line x1="113" y1="10" x2="128" y2="10" stroke="#5bb8f5" stroke-width="9" stroke-linecap="round"/>
+  <line x1="128" y1="10" x2="128" y2="27" stroke="#5bb8f5" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="66" cy="74" r="11" fill="#1e3a6e"/>
+  <text x="142" y="58" font-family="Arial" font-weight="700" font-size="21" fill="#5bb8f5">Men's</text>
+  <text x="142" y="80" font-family="Arial" font-weight="700" font-size="21" fill="#5bb8f5">Clinic</text>
+  <text x="142" y="98" font-family="Arial" font-size="12" fill="#1e3a6e">Dr. Iván Aguilar</text>
+</svg>`;
+
+// PAYMENT INFO BLOCKS
+function zelleBlock(){
+  return `<div class="zelle-box"><strong>Zelle</strong>${t('depositMsg')} Send via Zelle to: <strong>Marlaluna1208@gmail.com</strong></div>`;
+}
+function santanderBlock(){
+  return `<div class="santander-box">
+    <strong>Depósito vía Transferencia Bancaria</strong>
+    <div class="santander-grid">
+      <span>Titular</span><span>Marla Gricell Luna Chavez</span>
+      <span>Banco</span><span>Santander</span>
+      <span>Tarjeta</span><span>5579 0701 5901 9796</span>
+      <span>CLABE</span><span>014028606007400402</span>
+      <span>Cuenta</span><span>60600740040</span>
+    </div>
+  </div>`;
+}
+function paymentBlock(){return lang==='en'?zelleBlock():santanderBlock();}
+
+function docHead(type){
+  return `<div class="doc-header">
+    <div class="doc-logo">${LOGO_SVG}</div>
+    <div class="doc-meta-right">
+      <div class="doc-type-badge">${t('badge.'+type)}</div>
+      <div class="doc-subtitle">${t('surgeon')}<br>${t('sub')}<br>${t('dgp')}</div>
+    </div>
+  </div>`;
+}
+function docFoot(clinic){
+  return `<div class="clinic-bar">${clinic.name}${clinic.address?' &nbsp;·&nbsp; '+clinic.address:''}${clinic.phone?' &nbsp;·&nbsp; '+clinic.phone:''}</div>
+  <div class="doc-footer">
+    <div class="doc-footer-left"><p><strong>Dr. Iván Aguilar</strong><br>${t('member')}<br>${t('footAddr')}<br>${t('footWa')}</p></div>
+    <div class="doc-footer-right">
+      <p style="color:#ccc;font-size:10px;margin-bottom:2px;">____________________</p>
+      <strong>Dr. Iván Aguilar</strong><p>${t('surgeon')}</p>
+    </div>
+  </div>`;
+}
+function metaBlock(extra){
+  const pname=document.getElementById('patient-name').value||'—';
+  const date=fmtDate(document.getElementById('doc-date').value);
+  const city=document.getElementById('doc-city').value;
+  const clinic=getClinic();
+  return `<div class="doc-meta">
+    <div class="doc-meta-item"><span>${t('patient')}</span><span>${pname}</span></div>
+    <div class="doc-meta-item"><span>${t('date')}</span><span>${date}</span></div>
+    <div class="doc-meta-item"><span>${t('city')}</span><span>${city}</span></div>
+    <div class="doc-meta-item"><span>${t('clinic')}</span><span>${clinic.name}</span></div>
+    ${extra||''}
+  </div>`;
+}
+
+function buildDocHTML(type){
+  const clinic=getClinic();
+  const fxRate=fx();
+  const showMN=lang==='es';
+
+  if(type==='desgloce'||type==='cotizacion'){
+    const sid=type==='desgloce'?'d':'c';
+    const tot=getTotal(sid);
+    const rows=items[sid].map(i=>{
+      const sub=(i.qty||1)*(parseFloat(i.price)||0);
+      const mnCell=showMN?`<td style="text-align:right;color:#1a6ea8;">$${fmtMN(sub)}</td>`:'';
+      return `<tr><td>${i.desc||'—'}</td><td style="text-align:center">${i.qty||1}</td><td style="text-align:right">$${fmt(sub)}</td>${mnCell}</tr>`;
+    }).join('');
+    const mnTh=showMN?`<th style="text-align:right">MXN</th>`:'';
+    const upcoming=type==='desgloce'?document.getElementById('upcoming-dates').value:'';
+    const totals=`<div class="doc-totals">
+      <div class="doc-total-box usd">${t('totalInv')}: $${fmt(tot)} USD</div>
+      ${showMN?`<div class="doc-total-box mn">$${fmtMN(tot)} MXN</div>`:''}
+    </div>
+    ${showMN?`<p style="text-align:right;font-size:9px;color:#999;margin-top:3px;">${t('tcLabel')} $1 USD = $${fxRate.toFixed(2)} MXN · Bloomberg Interbancario</p>`:''}`;
+
+    return docHead(type)+metaBlock()+`
+    <table class="doc-table"><thead><tr><th>${t('desc')}</th><th style="text-align:center;width:40px">${t('qty')}</th><th style="text-align:right;width:90px">USD</th>${mnTh}</tr></thead>
+    <tbody>${rows}</tbody></table>
+    ${totals}
+    ${upcoming?`<p style="margin-top:11px;font-size:12px;"><strong>${lang==='es'?'Próximas fechas:':'Upcoming dates:'}</strong> ${upcoming} / ${document.getElementById('doc-city').value}</p>`:''}
+    ${paymentBlock()}
+    <div class="doc-note">${t('depositNote')}</div>
+    ${docFoot(clinic)}`;
+
+  } else if(type==='recibo'){
+    const dep=parseFloat(document.getElementById('deposit-amount').value)||0;
+    const tot=parseFloat(document.getElementById('total-proc').value)||0;
+    const due=Math.max(0,tot-dep);
+    const method=document.getElementById('payment-method').value;
+    const concept=document.getElementById('payment-concept').value;
+    const proc=document.getElementById('procedure-recibo').value;
+    return docHead('recibo')+metaBlock()+`
+    <div class="payment-summary">
+      <div class="payment-row"><span>${t('procCost')}</span><span>$${fmt(tot)} USD${showMN?' &nbsp;·&nbsp; $'+fmtMN(tot)+' MXN':''}</span></div>
+      <div class="payment-row"><span>${t('amtRec')}</span><span>$${fmt(dep)} USD</span></div>
+      <div class="payment-row"><span>${t('payMethod')}</span><span>${method}</span></div>
+      ${concept?`<div class="payment-row"><span>${t('payConcept')}</span><span>${concept}</span></div>`:''}
+      <div class="payment-row due"><span>${t('balDue')}</span><span>$${fmt(due)} USD${showMN?' &nbsp;·&nbsp; $'+fmtMN(due)+' MXN':''}</span></div>
+    </div>
+    ${showMN?`<p style="font-size:9px;color:#999;margin-top:3px;text-align:right;">${t('tcLabel')} $1 USD = $${fxRate.toFixed(2)} MXN · Bloomberg Interbancario</p>`:''}
+    ${proc?`<p style="margin-top:11px;font-size:12px;font-weight:700;">${t('procr')}:</p><ul style="margin:5px 0 0 16px;font-size:11px;">${proc.split('\n').map(l=>`<li>${l}</li>`).join('')}</ul>`:''}
+    <div class="doc-note">${t('depositNote')}</div>
+    ${docFoot(clinic)}`;
+
+  } else if(type==='admission'){
+    const sd=fmtDate(document.getElementById('surgery-date').value);
+    const ci=fmtTime(document.getElementById('checkin-time').value);
+    const proc=document.getElementById('procedure-admission').value;
+    const coord=document.getElementById('coordinator-name').value;
+    const ctel=document.getElementById('coordinator-tel').value;
+    const cemail=document.getElementById('coordinator-email').value;
+    // Only show the selected city's clinic
+    return docHead('admission')+metaBlock(`
+      <div class="doc-meta-item"><span>${t('hospital')}</span><span>${clinic.name}</span></div>
+      <div class="doc-meta-item"><span>${t('address')}</span><span>${clinic.address}</span></div>
+      ${clinic.phone?`<div class="doc-meta-item"><span>${t('phone')}</span><span>${clinic.phone}</span></div>`:''}
+      <div class="doc-meta-item"><span>${t('surgDate')}</span><span>${sd}</span></div>
+      <div class="doc-meta-item"><span>${t('checkIn')}</span><span>${ci}</span></div>
+      <div class="doc-meta-item"><span>${t('procedure')}</span><span>${proc}</span></div>`)+`
+    <div class="coordinator-box">
+      <p style="margin-bottom:5px;font-size:10px;">${t('contactMsg')}</p>
+      <strong style="font-size:13px;">${coord}</strong><br>
+      <span>${t('tel')} ${ctel}</span><br>
+      <span>${t('email')} ${cemail}</span>
+    </div>
+    ${docFoot(clinic)}`;
+  }
+  return '';
+}
+
+function previewDoc(type){
+  document.getElementById('preview-content').innerHTML=buildDocHTML(type);
+  document.getElementById('modal-title').textContent=t('badge.'+type);
+  document.getElementById('preview-modal').classList.add('open');
+}
+function closePreview(){document.getElementById('preview-modal').classList.remove('open');}
+
+function getDocCSS(){
+  return `*{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:Arial,sans-serif;font-size:12px;color:#222;padding:28px 36px;max-width:720px;margin:0 auto;}
+  .doc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #1e3a6e;}
+  .doc-logo svg{width:150px;height:auto;}
+  .doc-meta-right{text-align:right;}
+  .doc-type-badge{display:inline-block;background:#1e3a6e;color:#fff;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;margin-bottom:4px;}
+  .doc-subtitle{font-size:9px;color:#5a7090;line-height:1.5;}
+  .doc-meta{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin-bottom:14px;background:#f7fafd;padding:10px;border-radius:6px;border:1px solid #dde3ee;}
+  .doc-meta-item{display:flex;flex-direction:column;}.doc-meta-item span:first-child{font-size:9px;font-weight:700;text-transform:uppercase;color:#90a8c0;}.doc-meta-item span:last-child{font-size:11px;color:#222;font-weight:500;}
+  .doc-table{width:100%;border-collapse:collapse;margin-bottom:9px;}.doc-table th{background:#1e3a6e;color:#fff;font-size:9px;font-weight:700;text-transform:uppercase;padding:6px 9px;text-align:left;}.doc-table td{padding:6px 9px;border-bottom:1px solid #eef2f8;font-size:11px;}
+  .doc-totals{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;margin-top:3px;}
+  .doc-total-box{padding:6px 13px;border-radius:6px;font-size:13px;font-weight:700;text-align:right;min-width:170px;}
+  .doc-total-box.usd{background:#1e3a6e;color:#fff;}.doc-total-box.mn{background:#5bb8f5;color:#0d2a50;}
+  .doc-note{background:#fff8e1;border-left:4px solid #f9a825;padding:8px 12px;font-size:9px;color:#555;line-height:1.65;margin-top:11px;}
+  .zelle-box{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;padding:7px 11px;margin-top:8px;font-size:10px;color:#2e7d32;}
+  .santander-box{background:#fff0f0;border:1px solid #f5b8b8;border-radius:6px;padding:9px 12px;margin-top:8px;font-size:11px;color:#7a1010;}
+  .santander-box strong{font-size:12px;color:#b91c1c;display:block;margin-bottom:4px;}
+  .santander-grid{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:11px;}
+  .santander-grid span:nth-child(odd){color:#999;font-weight:700;text-transform:uppercase;font-size:9px;}
+  .payment-summary{background:#f7fafd;border:1px solid #dde3ee;border-radius:6px;padding:10px;margin-top:8px;}
+  .payment-row{display:flex;justify-content:space-between;padding:2px 0;font-size:11px;}.payment-row.due{font-weight:700;color:#c62828;border-top:1px solid #dde3ee;padding-top:5px;margin-top:3px;font-size:12px;}
+  .coordinator-box{background:#e8f4fb;border:1px solid #b3d4ec;border-radius:6px;padding:9px 12px;margin-top:8px;font-size:10px;color:#1e3a6e;}
+  .clinic-bar{background:#e0ecfa;border-radius:6px;padding:5px 10px;margin-top:10px;font-size:8px;color:#1e3a6e;text-align:center;font-weight:700;}
+  .doc-footer{margin-top:16px;padding-top:10px;border-top:1px solid #dde3ee;display:flex;justify-content:space-between;align-items:flex-end;}
+  .doc-footer-left p{font-size:9px;color:#5a7090;line-height:1.7;}.doc-footer-right{text-align:right;}.doc-footer-right strong{font-size:11px;color:#1e3a6e;display:block;}.doc-footer-right p{font-size:9px;color:#aaa;}
+  @media print{body{padding:16px 24px;max-width:100%;}@page{size:letter;margin:1cm;}}`;
+}
+
+function exportPDF(type){
+  const pname=document.getElementById('patient-name').value||'documento';
+  const fname=type+'_'+pname.replace(/\s+/g,'_')+'.html';
+  const html=buildDocHTML(type);
+  const full=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Dr. Iván Aguilar – ${t('badge.'+type)}</title><style>${getDocCSS()}</style></head><body>${html}</body></html>`;
+  const blob=new Blob([full],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=fname;a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),3000);
+}
+
+function showTab(tab){
+  currentTab=tab;
+  ['desgloce','cotizacion','recibo','admission'].forEach(t2=>{
+    document.getElementById('tab-'+t2).style.display=t2===tab?'block':'none';
+    document.getElementById('nav-'+t2).classList.toggle('active',t2===tab);
+  });
+  document.getElementById('topbar-title').textContent=L[lang].tabs[tab];
+}
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
+  toggleMN();
+  applyLabels();
+  buildPicker('d');buildPicker('c');
+  renderItems('d');renderItems('c');
+}
+
+function applyLabels(){
+  const map={
+    'topbar-title':L[lang].tabs[currentTab],
+    'nl-d':L[lang].nav.d,'nl-c':L[lang].nav.c,'nl-r':L[lang].nav.r,'nl-a':L[lang].nav.a,
+    's-patinfo':L[lang].patinfo,'s-patient':L[lang].patient,'s-date':L[lang].date,'s-city':L[lang].city,'s-clinic':L[lang].clinic,
+    's-items-d':L[lang].itemsd,'s-desc-d':L[lang].desc,'s-qty-d':L[lang].qty,'s-mn-d':'MXN',
+    's-dates':L[lang].dates,'s-dates-lbl':L[lang].datesLbl,'s-prev-d':L[lang].preview,'s-pdf-d':L[lang].pdf,
+    's-items-c':L[lang].itemsc,'s-desc-c':L[lang].desc,'s-qty-c':L[lang].qty,'s-mn-c':'MXN',
+    's-prev-c':L[lang].preview,'s-pdf-c':L[lang].pdf,
+    's-payinfo':L[lang].payinfo,'s-dep':L[lang].dep,'s-method':L[lang].method,
+    's-totproc':L[lang].totproc,'s-due':L[lang].due,'s-concept':L[lang].concept,'s-procr':L[lang].procr,
+    's-prev-r':L[lang].preview,'s-pdf-r':L[lang].pdf,
+    's-surginfo':L[lang].surginfo,'s-surgdate':L[lang].surgdate,'s-checkin':L[lang].checkin,'s-proca':L[lang].proca,
+    's-coord':L[lang].coord,'s-coordtel':L[lang].coordtel,'s-coordemail':L[lang].coordemail,
+    's-prev-a':L[lang].preview,'s-pdf-a':L[lang].pdf,
+  };
+  for(const[id,val]of Object.entries(map)){const el=document.getElementById(id);if(el)el.textContent=val;}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  // Set today's date
+  const today=new Date();
+  document.getElementById('doc-date').value=today.toISOString().slice(0,10);
+  // Show today's date in FX row
+  const opts={year:'numeric',month:'long',day:'numeric'};
+  document.getElementById('fx-date').textContent=today.toLocaleDateString('es-MX',opts);
+  updateClinicOptions();
+  buildPicker('d');buildPicker('c');
+  toggleMN();
+  applyLabels();
+});
+</script>
+</body>
+</html>
