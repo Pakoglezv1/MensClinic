@@ -632,15 +632,9 @@ function exportPDF(type){
 
   const element = document.createElement('div');
   element.innerHTML = `
-    <html>
-      <head>
-        <meta charset="UTF-8">
-        <style>${getDocCSS()}</style>
-      </head>
-      <body>
-        ${html}
-      </body>
-    </html>
+    <meta charset="UTF-8">
+    <style>${getDocCSS()}</style>
+    ${html}
   `;
 
   html2pdf()
