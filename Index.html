@@ -625,10 +625,9 @@ function getDocCSS(){
   .doc-footer-left p{font-size:9px;color:#5a7090;line-height:1.7;}.doc-footer-right{text-align:right;}.doc-footer-right strong{font-size:11px;color:#1e3a6e;display:block;}.doc-footer-right p{font-size:9px;color:#aaa;}
   @media print{body{padding:16px 24px;max-width:100%;}@page{size:letter;margin:1cm;}}`;
 }
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
 function exportPDF(type){
-  const pname = document.getElementById('patient-name').value || 'documento';
-  const html = buildDocHTML(type);
 
   const element = document.createElement('div');
   element.innerHTML = `
@@ -698,6 +697,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   applyLabels();
 });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>
