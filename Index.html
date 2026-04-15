@@ -248,7 +248,7 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
     <div class="preview-header">
       <h3 id="modal-title">Vista Previa</h3>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn-primary" id="modal-pdf-btn" onclick="exportPDF(currentTab)" style="padding:5px 12px;font-size:11px;background:#0f766e;">⬇ PDF</button>
+        <button class="btn-primary" id="modal-pdf-btn" onclick="downloadPDF()" style="padding:5px 12px;font-size:11px;background:#0f766e;">⬇ PDF</button>
         <button class="close-btn" onclick="closePreview()">✕</button>
       </div>
     </div>
@@ -626,24 +626,24 @@ function getDocCSS(){
   @media print{body{padding:16px 24px;max-width:100%;}@page{size:letter;margin:1cm;}}`;
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script>
-function exportPDF(type){
 
-  const element = document.createElement('div');
-  element.innerHTML = `
-    <meta charset="UTF-8">
-    <style>${getDocCSS()}</style>
-    ${html}
-  `;
+<script>
+function downloadPDF(){
+  const content = document.getElementById('preview-content');
+
+  if(!content){
+    alert('No se encontró el contenido');
+    return;
+  }
 
   html2pdf()
     .set({
       margin: 0.5,
-      filename: type + '_' + pname.replace(/\s+/g,'_') + '.pdf',
+      filename: 'documento.pdf',
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     })
-    .from(element)
+    .from(content)
     .save();
 }
 
@@ -681,21 +681,25 @@ function applyLabels(){
     's-coord':L[lang].coord,'s-coordtel':L[lang].coordtel,'s-coordemail':L[lang].coordemail,
     's-prev-a':L[lang].preview,'s-pdf-a':L[lang].pdf,
   };
-  for(const[id,val]of Object.entries(map)){const el=document.getElementById(id);if(el)el.textContent=val;}
+  for(const[id,val]of Object.entries(map)){
+    const el=document.getElementById(id);
+    if(el)el.textContent=val;
+  }
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  // Set today's date
   const today=new Date();
   document.getElementById('doc-date').value=today.toISOString().slice(0,10);
-  // Show today's date in FX row
+
   const opts={year:'numeric',month:'long',day:'numeric'};
   document.getElementById('fx-date').textContent=today.toLocaleDateString('es-MX',opts);
+
   updateClinicOptions();
   buildPicker('d');buildPicker('c');
   toggleMN();
   applyLabels();
 });
 </script>
+
 </body>
 </html>
