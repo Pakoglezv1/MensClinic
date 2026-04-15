@@ -627,15 +627,31 @@ function getDocCSS(){
 }
 
 function exportPDF(type){
-  const pname=document.getElementById('patient-name').value||'documento';
-  const fname=type+'_'+pname.replace(/\s+/g,'_')+'.html';
-  const html=buildDocHTML(type);
-  const full=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Dr. Iván Aguilar – ${t('badge.'+type)}</title><style>${getDocCSS()}</style></head><body>${html}</body></html>`;
-  const blob=new Blob([full],{type:'text/html'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=fname;a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),3000);
+  const pname = document.getElementById('patient-name').value || 'documento';
+  const html = buildDocHTML(type);
+
+  const element = document.createElement('div');
+  element.innerHTML = `
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>${getDocCSS()}</style>
+      </head>
+      <body>
+        ${html}
+      </body>
+    </html>
+  `;
+
+  html2pdf()
+    .set({
+      margin: 0.5,
+      filename: type + '_' + pname.replace(/\s+/g,'_') + '.pdf',
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    })
+    .from(element)
+    .save();
 }
 
 function showTab(tab){
@@ -688,5 +704,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   applyLabels();
 });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>
