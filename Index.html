@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +25,6 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
 .fx-row{display:flex;align-items:center;gap:10px;background:#f0f7ff;border:1px solid #b3d4f0;border-radius:6px;padding:8px 14px;margin-bottom:14px;font-size:12px;color:#1e3a6e;flex-wrap:wrap;}
 .fx-row label{font-weight:700;white-space:nowrap;}
 .fx-row input{width:80px;padding:4px 8px;border:1px solid #b3d4f0;border-radius:5px;font-size:13px;font-weight:700;color:#1e3a6e;background:#fff;}
-.fx-row span{color:#5a7090;font-size:11px;}
 .form-section{background:#fff;border:1px solid #dde3ee;border-radius:8px;padding:18px;margin-bottom:16px;}
 .form-section h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#1e3a6e;margin-bottom:14px;padding-bottom:7px;border-bottom:2px solid #e0ecfa;}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -39,7 +38,6 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
 .price-selector select{flex:1;min-width:200px;padding:7px 9px;border:1px solid #c8d6e8;border-radius:6px;font-size:13px;background:#f7fafd;}
 .price-selector input{width:65px;padding:7px 9px;border:1px solid #c8d6e8;border-radius:6px;font-size:13px;background:#f7fafd;}
 .add-item-btn{background:#1e3a6e;color:#fff;border:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;}
-.add-item-btn:hover{background:#16305c;}
 .items-table{width:100%;border-collapse:collapse;margin-bottom:8px;}
 .items-table th{background:#e0ecfa;color:#1e3a6e;font-size:10px;font-weight:700;text-transform:uppercase;padding:7px 9px;text-align:left;}
 .items-table td{padding:5px 7px;border-bottom:1px solid #eef2f8;vertical-align:middle;font-size:13px;}
@@ -52,8 +50,8 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
 .actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
 .btn-primary{background:#1e3a6e;color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;}
 .btn-primary:hover{background:#16305c;}
-.btn-secondary{background:#fff;color:#1e3a6e;border:1px solid #1e3a6e;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;}
-.btn-secondary:hover{background:#e0ecfa;}
+.btn-green{background:#0f766e;color:#fff;border:none;padding:9px 20px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;}
+.btn-green:hover{background:#0d6460;}
 /* MODAL */
 .preview-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:flex-start;justify-content:center;overflow:auto;padding:20px;}
 .preview-wrap.open{display:flex;}
@@ -62,8 +60,7 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
 .preview-header h3{font-size:13px;font-weight:700;color:#1e3a6e;}
 .close-btn{background:none;border:none;font-size:20px;cursor:pointer;color:#888;}
 .preview-doc{padding:28px 36px;}
-
-/* DOC */
+/* DOC STYLES */
 .doc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;padding-bottom:14px;border-bottom:3px solid #1e3a6e;}
 .doc-logo svg{width:150px;height:auto;}
 .doc-meta-right{text-align:right;}
@@ -97,9 +94,38 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
 .payment-row.due{font-weight:700;color:#c62828;border-top:1px solid #dde3ee;padding-top:6px;margin-top:3px;font-size:13px;}
 .coordinator-box{background:#e8f4fb;border:1px solid #b3d4ec;border-radius:6px;padding:10px 13px;margin-top:9px;font-size:11px;color:#1e3a6e;}
 .clinic-bar{background:#e0ecfa;border-radius:6px;padding:5px 10px;margin-top:11px;font-size:9px;color:#1e3a6e;text-align:center;font-weight:700;letter-spacing:.3px;}
+
+/* PRINT STYLES */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body > .app { display: none !important; }
+  body > .preview-wrap { display: none !important; }
+  #print-area { display: block !important; }
+  @page { size: letter; margin: 1.2cm; }
+  /* preserve background colors when printing */
+  .doc-type-badge, .doc-table th, .doc-total-box.usd { background-color: #1e3a6e !important; color: #fff !important; }
+  .doc-total-box.mn { background-color: #5bb8f5 !important; color: #0d2a50 !important; }
+  .doc-meta { background-color: #f7fafd !important; }
+  .doc-note { background-color: #fff8e1 !important; }
+  .clinic-bar { background-color: #e0ecfa !important; }
+  .zelle-box { background-color: #e8f5e9 !important; }
+  .santander-box { background-color: #fff0f0 !important; }
+  .coordinator-box { background-color: #e8f4fb !important; }
+  .payment-summary { background-color: #f7fafd !important; }
+}
+#print-area {
+  display: none;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: #222;
+}
 </style>
 </head>
 <body>
+
+<!-- Hidden print area — only this renders when printing -->
+<div id="print-area"></div>
+
 <div class="app">
   <div class="sidebar">
     <div class="sidebar-logo">
@@ -133,15 +159,13 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
     </div>
 
     <div class="content">
-      <!-- FX ROW — only shown in ES -->
       <div class="fx-row" id="fx-row">
         <label>Tipo de cambio del día:</label>
         <span>$1 USD =</span>
         <input type="number" id="fx-rate" value="17.43" step="0.01" min="1" oninput="refreshTotals()">
-        <span>MXN &nbsp;·&nbsp; Fuente: Bloomberg / Interbancario · <span id="fx-date"></span></span>
+        <span>MXN &nbsp;·&nbsp; Bloomberg / Interbancario &nbsp;·&nbsp; <span id="fx-date"></span></span>
       </div>
 
-      <!-- PATIENT + CLINIC -->
       <div class="form-section">
         <h3 id="s-patinfo">Información del Paciente</h3>
         <div class="form-grid">
@@ -156,7 +180,6 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
         </div>
       </div>
 
-      <!-- TAB DESGLOCE -->
       <div id="tab-desgloce">
         <div class="form-section">
           <h3 id="s-items-d">Conceptos del Tratamiento</h3>
@@ -176,11 +199,10 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
         </div>
         <div class="actions">
           <button class="btn-primary" onclick="previewDoc('desgloce')">👁 <span id="s-prev-d">Vista previa</span></button>
-          <button class="btn-primary" onclick="previewDoc('desgloce')" style="background:#0f766e;">🖨 <span id="s-pdf-d">Generar PDF</span></button>
+          <button class="btn-green" onclick="exportPDF('desgloce')">⬇ <span id="s-pdf-d">Descargar PDF</span></button>
         </div>
       </div>
 
-      <!-- TAB COTIZACION -->
       <div id="tab-cotizacion" style="display:none">
         <div class="form-section">
           <h3 id="s-items-c">Conceptos de la Cotización</h3>
@@ -196,11 +218,10 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
         </div>
         <div class="actions">
           <button class="btn-primary" onclick="previewDoc('cotizacion')">👁 <span id="s-prev-c">Vista previa</span></button>
-          <button class="btn-primary" onclick="previewDoc('cotizacion')" style="background:#0f766e;">🖨 <span id="s-pdf-c">Generar PDF</span></button>
+          <button class="btn-green" onclick="exportPDF('cotizacion')">⬇ <span id="s-pdf-c">Descargar PDF</span></button>
         </div>
       </div>
 
-      <!-- TAB RECIBO -->
       <div id="tab-recibo" style="display:none">
         <div class="form-section">
           <h3 id="s-payinfo">Información de Pago</h3>
@@ -217,11 +238,10 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
         </div>
         <div class="actions">
           <button class="btn-primary" onclick="previewDoc('recibo')">👁 <span id="s-prev-r">Vista previa</span></button>
-          <button class="btn-primary" onclick="previewDoc('recibo')" style="background:#0f766e;">🖨 <span id="s-pdf-r">Generar PDF</span></button>
+          <button class="btn-green" onclick="exportPDF('recibo')">⬇ <span id="s-pdf-r">Descargar PDF</span></button>
         </div>
       </div>
 
-      <!-- TAB ADMISSION -->
       <div id="tab-admission" style="display:none">
         <div class="form-section">
           <h3 id="s-surginfo">Información de Cirugía</h3>
@@ -236,28 +256,25 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
         </div>
         <div class="actions">
           <button class="btn-primary" onclick="previewDoc('admission')">👁 <span id="s-prev-a">Vista previa</span></button>
-          <button class="btn-primary" onclick="previewDoc('admission')" style="background:#0f766e;">🖨 <span id="s-pdf-a">Generar PDF</span></button>
+          <button class="btn-green" onclick="exportPDF('admission')">⬇ <span id="s-pdf-a">Descargar PDF</span></button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="preview-wrap" id="preview-modal">
   <div class="preview-box">
     <div class="preview-header">
       <h3 id="modal-title">Vista Previa</h3>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button class="btn-primary" id="modal-pdf-btn" onclick="exportPDF(currentTab)" style="padding:5px 12px;font-size:11px;background:#0f766e;">⬇ PDF</button>
+        <button class="btn-green" onclick="exportPDF(currentTab)" style="padding:5px 12px;font-size:11px;">⬇ PDF</button>
         <button class="close-btn" onclick="closePreview()">✕</button>
       </div>
     </div>
     <div class="preview-doc" id="preview-content"></div>
   </div>
 </div>
-
-
 
 <script>
 let lang='es', currentTab='desgloce';
@@ -303,8 +320,7 @@ const L={
     nav:{d:'Desgloce',c:'Cotización',r:'Recibo',a:'Admission Sheet'},
     patinfo:'Información del Paciente',patient:'Nombre del Paciente',date:'Fecha',city:'Ciudad',clinic:'Clínica / Hospital',
     itemsd:'Conceptos del Tratamiento',itemsc:'Conceptos de la Cotización',
-    desc:'Descripción',qty:'Cant.',
-    dates:'Próximas Fechas',datesLbl:'Fechas disponibles',
+    desc:'Descripción',qty:'Cant.',dates:'Próximas Fechas',datesLbl:'Fechas disponibles',
     payinfo:'Información de Pago',dep:'Depósito recibido (USD)',method:'Método de pago',
     totproc:'Costo total procedimiento (USD)',due:'Saldo pendiente (USD)',concept:'Concepto',procr:'Procedimiento',
     surginfo:'Información de Cirugía',surgdate:'Fecha de cirugía',checkin:'Check-in',proca:'Procedimiento',
@@ -322,16 +338,14 @@ const L={
     contactMsg:'Para cualquier pregunta o duda, comuníquese con su coordinadora:',
     tel:'Tel.',email:'E-mail',
     footAddr:'Vaquita 12520, 20 de Noviembre, 22100 Tijuana, B.C.',
-    footWa:'Tel / WhatsApp: +1 (619) 628-6259',
-    tcLabel:'Tipo de cambio:',
+    footWa:'Tel / WhatsApp: +1 (619) 628-6259',tcLabel:'Tipo de cambio:',
   },
   en:{
     tabs:{desgloce:'Treatment Breakdown',cotizacion:'Quote',recibo:'Payment Receipt',admission:'Admission Sheet'},
     nav:{d:'Breakdown',c:'Quote',r:'Receipt',a:'Admission Sheet'},
     patinfo:'Patient Information',patient:'Patient Name',date:'Date',city:'City',clinic:'Clinic / Hospital',
     itemsd:'Treatment Items',itemsc:'Quote Items',
-    desc:'Description',qty:'Qty.',
-    dates:'Upcoming Dates',datesLbl:'Available dates',
+    desc:'Description',qty:'Qty.',dates:'Upcoming Dates',datesLbl:'Available dates',
     payinfo:'Payment Information',dep:'Deposit received (USD)',method:'Payment method',
     totproc:'Total procedure cost (USD)',due:'Balance due (USD)',concept:'Concept',procr:'Procedure',
     surginfo:'Surgery Information',surgdate:'Surgery date',checkin:'Check-in time',proca:'Procedure',
@@ -349,8 +363,7 @@ const L={
     contactMsg:'For any question or concern, please contact your coordinator:',
     tel:'Tel.',email:'E-mail',
     footAddr:'Vaquita 12520, 20 de Noviembre, 22100 Tijuana, B.C.',
-    footWa:'Tel / WhatsApp: +1 (619) 628-6259',
-    tcLabel:'Exchange rate:',
+    footWa:'Tel / WhatsApp: +1 (619) 628-6259',tcLabel:'Exchange rate:',
   }
 };
 
@@ -360,7 +373,6 @@ function fmt(n){return n.toLocaleString('en-US',{minimumFractionDigits:2,maximum
 function fmtMN(n){return (n*fx()).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function pn(p){return lang==='es'?p.es:p.en;}
 
-// Show/hide MXN columns
 function toggleMN(){
   const show=lang==='es';
   document.querySelectorAll('.mn-col').forEach(el=>el.style.display=show?'':'none');
@@ -370,11 +382,9 @@ function toggleMN(){
 let items={d:[],c:[]},nid=0;
 
 function buildPicker(sid){
-  const wrap=document.getElementById('picker-'+sid);
-  wrap.innerHTML=`<div class="price-selector">
-    <select id="sel-${sid}">
-      <option value="">${t('selectProd')}</option>
-      ${PRICES.map((p,i)=>`<option value="${i}">${pn(p)} — $${fmt(p.p)}</option>`).join('')}
+  document.getElementById('picker-'+sid).innerHTML=`<div class="price-selector">
+    <select id="sel-${sid}"><option value="">${t('selectProd')}</option>
+    ${PRICES.map((p,i)=>`<option value="${i}">${pn(p)} — $${fmt(p.p)}</option>`).join('')}
     </select>
     <input type="number" id="qty-${sid}" value="1" min="1" style="width:65px">
     <button class="add-item-btn" onclick="addFromPicker('${sid}')">${t('addBtn')}</button>
@@ -384,10 +394,10 @@ function buildPicker(sid){
 function addFromPicker(sid){
   const sel=document.getElementById('sel-'+sid);
   const qty=parseInt(document.getElementById('qty-'+sid).value)||1;
-  const idx=sel.value;if(idx==='')return;
+  const idx=sel.value; if(idx==='')return;
   const p=PRICES[parseInt(idx)];
   items[sid].push({id:nid++,desc:pn(p),qty,price:p.p});
-  renderItems(sid);sel.value='';document.getElementById('qty-'+sid).value=1;
+  renderItems(sid); sel.value=''; document.getElementById('qty-'+sid).value=1;
 }
 
 function renderItems(sid){
@@ -413,24 +423,20 @@ function upd(sid,id,field,val){
   if(it){it[field]=field==='desc'?val:(parseFloat(val)||0);renderItems(sid);}
 }
 function remItem(sid,id){items[sid]=items[sid].filter(i=>i.id!==id);renderItems(sid);}
-
 function calcTotal(sid){
   const tot=items[sid].reduce((s,i)=>s+(i.qty||1)*(parseFloat(i.price)||0),0);
   document.getElementById('total-'+sid+'-usd').textContent=t('totalInv')+': $'+fmt(tot)+' USD';
-  const mnEl=document.getElementById('total-'+sid+'-mn');
-  mnEl.textContent='$'+fmtMN(tot)+' MXN';
-  mnEl.style.display=lang==='es'?'':'none';
-  return tot;
+  const mn=document.getElementById('total-'+sid+'-mn');
+  mn.textContent='$'+fmtMN(tot)+' MXN';
+  mn.style.display=lang==='es'?'':'none';
 }
 function getTotal(sid){return items[sid].reduce((s,i)=>s+(i.qty||1)*(parseFloat(i.price)||0),0);}
 function refreshTotals(){if(items.d.length)renderItems('d');if(items.c.length)renderItems('c');}
-
 function calcDue(){
   const tot=parseFloat(document.getElementById('total-proc').value)||0;
   const dep=parseFloat(document.getElementById('deposit-amount').value)||0;
   document.getElementById('due-amount').value='$'+fmt(Math.max(0,tot-dep));
 }
-
 function updateClinicOptions(){
   const city=document.getElementById('doc-city').value;
   const sel=document.getElementById('doc-clinic');
@@ -441,7 +447,6 @@ function updateClinicOptions(){
   });
 }
 function getClinic(){try{return JSON.parse(document.getElementById('doc-clinic').value);}catch(e){return{name:'',address:'',phone:''};}}
-
 function fmtDate(d){
   if(!d)return'';const[y,m,day]=d.split('-');
   const ME=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -453,7 +458,7 @@ function fmtTime(v){
   return `${hh>12?hh-12:(hh||12)}:${m} ${hh>=12?'pm':'am'}`;
 }
 
-const LOGO_SVG=`<svg viewBox="0 0 210 130" xmlns="http://www.w3.org/2000/svg" style="width:155px;height:auto;">
+const LOGO=`<svg viewBox="0 0 210 130" xmlns="http://www.w3.org/2000/svg" style="width:150px;height:auto;">
   <circle cx="66" cy="74" r="38" fill="none" stroke="#5bb8f5" stroke-width="13"/>
   <line x1="94" y1="44" x2="128" y2="10" stroke="#5bb8f5" stroke-width="11" stroke-linecap="round"/>
   <line x1="113" y1="10" x2="128" y2="10" stroke="#5bb8f5" stroke-width="9" stroke-linecap="round"/>
@@ -464,42 +469,17 @@ const LOGO_SVG=`<svg viewBox="0 0 210 130" xmlns="http://www.w3.org/2000/svg" st
   <text x="142" y="98" font-family="Arial" font-size="12" fill="#1e3a6e">Dr. Iván Aguilar</text>
 </svg>`;
 
-// PAYMENT INFO BLOCKS
-function zelleBlock(){
-  return `<div class="zelle-box"><strong>Zelle</strong>${t('depositMsg')} Send via Zelle to: <strong>Marlaluna1208@gmail.com</strong></div>`;
-}
-function santanderBlock(){
-  return `<div class="santander-box">
-    <strong>Depósito vía Transferencia Bancaria</strong>
-    <div class="santander-grid">
-      <span>Titular</span><span>Marla Gricell Luna Chavez</span>
-      <span>Banco</span><span>Santander</span>
-      <span>Tarjeta</span><span>5579 0701 5901 9796</span>
-      <span>CLABE</span><span>014028606007400402</span>
-      <span>Cuenta</span><span>60600740040</span>
-    </div>
-  </div>`;
-}
-function paymentBlock(){return lang==='en'?zelleBlock():santanderBlock();}
+function zelleBlock(){return `<div class="zelle-box"><strong>Zelle &nbsp;·&nbsp;</strong> ${t('depositMsg')} Send via Zelle to: <strong>Marlaluna1208@gmail.com</strong></div>`;}
+function santanderBlock(){return `<div class="santander-box"><strong>Depósito vía Transferencia Bancaria</strong><div class="santander-grid"><span>Titular</span><span>Marla Gricell Luna Chavez</span><span>Banco</span><span>Santander</span><span>Tarjeta</span><span>5579 0701 5901 9796</span><span>CLABE</span><span>014028606007400402</span><span>Cuenta</span><span>60600740040</span></div></div>`;}
+function payBlock(){return lang==='en'?zelleBlock():santanderBlock();}
 
 function docHead(type){
-  return `<div class="doc-header">
-    <div class="doc-logo">${LOGO_SVG}</div>
-    <div class="doc-meta-right">
-      <div class="doc-type-badge">${t('badge.'+type)}</div>
-      <div class="doc-subtitle">${t('surgeon')}<br>${t('sub')}<br>${t('dgp')}</div>
-    </div>
-  </div>`;
+  return `<div class="doc-header"><div class="doc-logo">${LOGO}</div><div class="doc-meta-right"><div class="doc-type-badge">${t('badge.'+type)}</div><div class="doc-subtitle">${t('surgeon')}<br>${t('sub')}<br>${t('dgp')}</div></div></div>`;
 }
 function docFoot(clinic){
   return `<div class="clinic-bar">${clinic.name}${clinic.address?' &nbsp;·&nbsp; '+clinic.address:''}${clinic.phone?' &nbsp;·&nbsp; '+clinic.phone:''}</div>
-  <div class="doc-footer">
-    <div class="doc-footer-left"><p><strong>Dr. Iván Aguilar</strong><br>${t('member')}<br>${t('footAddr')}<br>${t('footWa')}</p></div>
-    <div class="doc-footer-right">
-      <p style="color:#ccc;font-size:10px;margin-bottom:2px;">____________________</p>
-      <strong>Dr. Iván Aguilar</strong><p>${t('surgeon')}</p>
-    </div>
-  </div>`;
+  <div class="doc-footer"><div class="doc-footer-left"><p><strong>Dr. Iván Aguilar</strong><br>${t('member')}<br>${t('footAddr')}<br>${t('footWa')}</p></div>
+  <div class="doc-footer-right"><p style="color:#ccc;font-size:10px;margin-bottom:2px;">____________________</p><strong>Dr. Iván Aguilar</strong><p>${t('surgeon')}</p></div></div>`;
 }
 function metaBlock(extra){
   const pname=document.getElementById('patient-name').value||'—';
@@ -511,40 +491,34 @@ function metaBlock(extra){
     <div class="doc-meta-item"><span>${t('date')}</span><span>${date}</span></div>
     <div class="doc-meta-item"><span>${t('city')}</span><span>${city}</span></div>
     <div class="doc-meta-item"><span>${t('clinic')}</span><span>${clinic.name}</span></div>
-    ${extra||''}
-  </div>`;
+    ${extra||''}</div>`;
 }
 
 function buildDocHTML(type){
   const clinic=getClinic();
   const fxRate=fx();
   const showMN=lang==='es';
-
   if(type==='desgloce'||type==='cotizacion'){
     const sid=type==='desgloce'?'d':'c';
     const tot=getTotal(sid);
+    const mnTh=showMN?`<th style="text-align:right">MXN</th>`:'';
     const rows=items[sid].map(i=>{
       const sub=(i.qty||1)*(parseFloat(i.price)||0);
-      const mnCell=showMN?`<td style="text-align:right;color:#1a6ea8;">$${fmtMN(sub)}</td>`:'';
-      return `<tr><td>${i.desc||'—'}</td><td style="text-align:center">${i.qty||1}</td><td style="text-align:right">$${fmt(sub)}</td>${mnCell}</tr>`;
+      const mnTd=showMN?`<td style="text-align:right;color:#1a6ea8">$${fmtMN(sub)}</td>`:'';
+      return `<tr><td>${i.desc||'—'}</td><td style="text-align:center">${i.qty||1}</td><td style="text-align:right">$${fmt(sub)}</td>${mnTd}</tr>`;
     }).join('');
-    const mnTh=showMN?`<th style="text-align:right">MXN</th>`:'';
     const upcoming=type==='desgloce'?document.getElementById('upcoming-dates').value:'';
-    const totals=`<div class="doc-totals">
+    return docHead(type)+metaBlock()+`
+    <table class="doc-table"><thead><tr><th>${t('desc')}</th><th style="text-align:center;width:40px">${t('qty')}</th><th style="text-align:right;width:90px">USD</th>${mnTh}</tr></thead><tbody>${rows}</tbody></table>
+    <div class="doc-totals">
       <div class="doc-total-box usd">${t('totalInv')}: $${fmt(tot)} USD</div>
       ${showMN?`<div class="doc-total-box mn">$${fmtMN(tot)} MXN</div>`:''}
     </div>
-    ${showMN?`<p style="text-align:right;font-size:9px;color:#999;margin-top:3px;">${t('tcLabel')} $1 USD = $${fxRate.toFixed(2)} MXN · Bloomberg Interbancario</p>`:''}`;
-
-    return docHead(type)+metaBlock()+`
-    <table class="doc-table"><thead><tr><th>${t('desc')}</th><th style="text-align:center;width:40px">${t('qty')}</th><th style="text-align:right;width:90px">USD</th>${mnTh}</tr></thead>
-    <tbody>${rows}</tbody></table>
-    ${totals}
+    ${showMN?`<p style="text-align:right;font-size:9px;color:#999;margin-top:3px;">${t('tcLabel')} $1 USD = $${fxRate.toFixed(2)} MXN · Bloomberg Interbancario</p>`:''}
     ${upcoming?`<p style="margin-top:11px;font-size:12px;"><strong>${lang==='es'?'Próximas fechas:':'Upcoming dates:'}</strong> ${upcoming} / ${document.getElementById('doc-city').value}</p>`:''}
-    ${paymentBlock()}
+    ${payBlock()}
     <div class="doc-note">${t('depositNote')}</div>
     ${docFoot(clinic)}`;
-
   } else if(type==='recibo'){
     const dep=parseFloat(document.getElementById('deposit-amount').value)||0;
     const tot=parseFloat(document.getElementById('total-proc').value)||0;
@@ -564,7 +538,6 @@ function buildDocHTML(type){
     ${proc?`<p style="margin-top:11px;font-size:12px;font-weight:700;">${t('procr')}:</p><ul style="margin:5px 0 0 16px;font-size:11px;">${proc.split('\n').map(l=>`<li>${l}</li>`).join('')}</ul>`:''}
     <div class="doc-note">${t('depositNote')}</div>
     ${docFoot(clinic)}`;
-
   } else if(type==='admission'){
     const sd=fmtDate(document.getElementById('surgery-date').value);
     const ci=fmtTime(document.getElementById('checkin-time').value);
@@ -572,7 +545,6 @@ function buildDocHTML(type){
     const coord=document.getElementById('coordinator-name').value;
     const ctel=document.getElementById('coordinator-tel').value;
     const cemail=document.getElementById('coordinator-email').value;
-    // Only show the selected city's clinic
     return docHead('admission')+metaBlock(`
       <div class="doc-meta-item"><span>${t('hospital')}</span><span>${clinic.name}</span></div>
       <div class="doc-meta-item"><span>${t('address')}</span><span>${clinic.address}</span></div>
@@ -599,49 +571,25 @@ function previewDoc(type){
 function closePreview(){document.getElementById('preview-modal').classList.remove('open');}
 
 function exportPDF(type){
-  const pname=document.getElementById('patient-name').value||'documento';
-  const fname=type+'_'+pname.replace(/\s+/g,'_')+'.pdf';
+  const area = document.getElementById('print-area');
+  const app  = document.querySelector('.app');
+  const modal = document.getElementById('preview-modal');
 
-  // Show doc in hidden render div
-  const renderDiv=document.getElementById('pdf-render');
-  renderDiv.innerHTML=buildDocHTML(type);
-  renderDiv.style.display='block';
+  // Populate print area with the document
+  area.innerHTML = buildDocHTML(type);
+  area.style.display = 'block';
+  app.style.display = 'none';
+  modal.classList.remove('open');
 
-  html2canvas(renderDiv,{
-    scale:2,
-    useCORS:true,
-    backgroundColor:'#ffffff',
-    width:750,
-    windowWidth:750
-  }).then(canvas=>{
-    renderDiv.style.display='none';
-    renderDiv.innerHTML='';
-    const {jsPDF}=window.jspdf;
-    const pdf=new jsPDF({orientation:'portrait',unit:'pt',format:'letter'});
-    const pw=pdf.internal.pageSize.getWidth();
-    const ph=pdf.internal.pageSize.getHeight();
-    const imgW=pw;
-    const imgH=canvas.height*(pw/canvas.width);
-    let yPos=0;
-    let remaining=imgH;
-    let page=0;
-    while(remaining>0){
-      if(page>0) pdf.addPage();
-      const srcY=page*ph*(canvas.width/pw);
-      const sliceH=Math.min(ph,remaining);
-      // Draw full image offset so current page portion shows
-      pdf.addImage(
-        canvas.toDataURL('image/jpeg',0.95),
-        'JPEG',0,-(page*ph),imgW,imgH
-      );
-      remaining-=ph;
-      page++;
-    }
-    pdf.save(fname);
-  }).catch(err=>{
-    renderDiv.style.display='none';
-    alert('Error generando PDF: '+err.message);
-  });
+  // Restore UI after print dialog closes (cancel or save)
+  window.onafterprint = function(){
+    area.style.display = 'none';
+    area.innerHTML = '';
+    app.style.display = 'flex';
+    window.onafterprint = null;
+  };
+
+  window.print();
 }
 
 function showTab(tab){
@@ -656,10 +604,9 @@ function showTab(tab){
 function setLang(l){
   lang=l;
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===l.toUpperCase()));
-  toggleMN();
-  applyLabels();
-  buildPicker('d');buildPicker('c');
-  renderItems('d');renderItems('c');
+  toggleMN(); applyLabels();
+  buildPicker('d'); buildPicker('c');
+  renderItems('d'); renderItems('c');
 }
 
 function applyLabels(){
@@ -681,17 +628,13 @@ function applyLabels(){
   for(const[id,val]of Object.entries(map)){const el=document.getElementById(id);if(el)el.textContent=val;}
 }
 
-document.addEventListener('DOMContentLoaded',()=>{
-  // Set today's date
+window.addEventListener('DOMContentLoaded',()=>{
   const today=new Date();
   document.getElementById('doc-date').value=today.toISOString().slice(0,10);
-  // Show today's date in FX row
-  const opts={year:'numeric',month:'long',day:'numeric'};
-  document.getElementById('fx-date').textContent=today.toLocaleDateString('es-MX',opts);
+  document.getElementById('fx-date').textContent=today.toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
   updateClinicOptions();
-  buildPicker('d');buildPicker('c');
-  toggleMN();
-  applyLabels();
+  buildPicker('d'); buildPicker('c');
+  toggleMN(); applyLabels();
 });
 </script>
 </body>
