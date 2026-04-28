@@ -325,8 +325,7 @@ const L={
     totproc:'Costo total procedimiento (USD)',due:'Saldo pendiente (USD)',concept:'Concepto',procr:'Procedimiento',
     surginfo:'Información de Cirugía',surgdate:'Fecha de cirugía',checkin:'Check-in',proca:'Procedimiento',
     coord:'Coordinadora',coordtel:'Teléfono coordinadora',coordemail:'Email coordinadora',
-    preview:'Vista previa',pdf:'Descargar PDF',
-    selectProd:'— Seleccionar producto —',addBtn:'Agregar',customBtn:'Agregar concepto personalizado',
+    preview:'Vista previa',pdf:'Descargar PDF',selectProd:'— Seleccionar producto —',addBtn:'Agregar',
     badge:{desgloce:'DESGLOCE DE TRATAMIENTO',cotizacion:'COTIZACIÓN',recibo:'RECIBO DE PAGO',admission:'ADMISSION SHEET'},
     totalInv:'Total Inversión',procCost:'Costo del Procedimiento',amtRec:'Monto Recibido',
     balDue:'Saldo Pendiente',payMethod:'Método de Pago',payConcept:'Concepto',
@@ -351,8 +350,7 @@ const L={
     totproc:'Total procedure cost (USD)',due:'Balance due (USD)',concept:'Concept',procr:'Procedure',
     surginfo:'Surgery Information',surgdate:'Surgery date',checkin:'Check-in time',proca:'Procedure',
     coord:'Coordinator',coordtel:'Coordinator phone',coordemail:'Coordinator email',
-    preview:'Preview',pdf:'Download PDF',
-    selectProd:'— Select product —',addBtn:'Add',customBtn:'Add custom item',
+    preview:'Preview',pdf:'Download PDF',selectProd:'— Select product —',addBtn:'Add',
     badge:{desgloce:'TREATMENT BREAKDOWN',cotizacion:'QUOTE',recibo:'PAYMENT RECEIPT',admission:'ADMISSION SHEET'},
     totalInv:'Total Investment',procCost:'Procedure Cost',amtRec:'Amount Received',
     balDue:'Balance Due',payMethod:'Payment Method',payConcept:'Concept',
@@ -391,17 +389,15 @@ function buildPicker(sid){
     <input type="number" id="qty-${sid}" value="1" min="1" style="width:58px">
     <button class="add-item-btn" onclick="addFromPicker('${sid}')">${t('addBtn')}</button>
   </div>`;
-  // Update custom button label
-  const cb=document.getElementById('s-custom-'+sid);
-  if(cb) cb.textContent=t('customBtn');
 }
 
 function addCustomItem(sid){
   items[sid].push({id:nid++,desc:'',qty:1,price:0,custom:true});
   renderItems(sid);
+  // Focus the last description input
   setTimeout(()=>{
     const inputs=document.querySelectorAll('#tbody-'+sid+' tr:last-child input[type="text"]');
-    if(inputs.length) inputs[0].focus();
+    if(inputs.length)inputs[0].focus();
   },50);
 }
 
@@ -422,10 +418,10 @@ function renderItems(sid){
     const sub=(item.qty||1)*(parseFloat(item.price)||0);
     const tr=document.createElement('tr');
     tr.innerHTML=`
-      <td><input type="text" value="${item.desc.replace(/"/g,'&quot;')}" placeholder="${item.custom?t('desc'):''}" oninput="upd('${sid}',${item.id},'desc',this.value)" style="min-width:150px"></td>
+      <td><input type="text" value="${item.desc.replace(/"/g,'&quot;')}" oninput="upd('${sid}',${item.id},'desc',this.value)" style="min-width:150px"></td>
       <td style="width:46px"><input type="number" value="${item.qty}" min="1" oninput="upd('${sid}',${item.id},'qty',this.value)" style="text-align:center;width:42px"></td>
-      <td style="width:95px"><input type="number" value="${item.price||''}" placeholder="0.00" oninput="upd('${sid}',${item.id},'price',this.value)" style="text-align:right;width:90px"></td>
-      <td class="mn-col" style="width:100px;color:#0a6ebd;font-weight:600;font-size:11px;text-align:right;display:${showMN?'':'none'}">${sub>0?fmtMN(sub):'—'}</td>
+      <td style="width:95px"><input type="number" value="${item.price}" oninput="upd('${sid}',${item.id},'price',this.value)" style="text-align:right;width:90px"></td>
+      <td class="mn-col" style="width:100px;color:#0a6ebd;font-weight:600;font-size:11px;text-align:right;display:${showMN?'':'none'}">${fmtMN(sub)}</td>
       <td style="width:24px"><button class="remove-btn" onclick="remItem('${sid}',${item.id})">×</button></td>`;
     tbody.appendChild(tr);
   });
@@ -624,10 +620,8 @@ function applyLabels(){
     'nl-d':L[lang].nav.d,'nl-c':L[lang].nav.c,'nl-r':L[lang].nav.r,'nl-a':L[lang].nav.a,
     's-patinfo':L[lang].patinfo,'s-patient':L[lang].patient,'s-date':L[lang].date,'s-city':L[lang].city,'s-clinic':L[lang].clinic,
     's-items-d':L[lang].itemsd,'s-desc-d':L[lang].desc,'s-qty-d':L[lang].qty,'s-mn-d':'MXN',
-    's-custom-d':L[lang].customBtn,
     's-dates':L[lang].dates,'s-dates-lbl':L[lang].datesLbl,'s-prev-d':L[lang].preview,'s-pdf-d':L[lang].pdf,
     's-items-c':L[lang].itemsc,'s-desc-c':L[lang].desc,'s-qty-c':L[lang].qty,'s-mn-c':'MXN',
-    's-custom-c':L[lang].customBtn,
     's-prev-c':L[lang].preview,'s-pdf-c':L[lang].pdf,
     's-payinfo':L[lang].payinfo,'s-dep':L[lang].dep,'s-method':L[lang].method,
     's-totproc':L[lang].totproc,'s-due':L[lang].due,'s-concept':L[lang].concept,'s-procr':L[lang].procr,
