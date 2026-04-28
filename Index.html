@@ -38,6 +38,8 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
 .price-selector select{flex:1;min-width:180px;padding:6px 8px;border:1px solid #c8d6e8;border-radius:6px;font-size:12px;background:#f7fafd;}
 .price-selector input{width:60px;padding:6px 8px;border:1px solid #c8d6e8;border-radius:6px;font-size:12px;background:#f7fafd;}
 .add-item-btn{background:#1e3a6e;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;white-space:nowrap;}
+.add-custom-btn{display:flex;align-items:center;gap:5px;background:none;border:1.5px dashed #5bb8f5;color:#1e3a6e;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700;margin-bottom:9px;transition:background .15s;}
+.add-custom-btn:hover{background:#e8f4fb;}
 .items-table{width:100%;border-collapse:collapse;margin-bottom:7px;}
 .items-table th{background:#e0ecfa;color:#1e3a6e;font-size:9px;font-weight:700;text-transform:uppercase;padding:6px 8px;text-align:left;}
 .items-table td{padding:4px 6px;border-bottom:1px solid #eef2f8;vertical-align:middle;font-size:12px;}
@@ -175,6 +177,7 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
         <div class="form-section">
           <h3 id="s-items-d">Conceptos del Tratamiento</h3>
           <div id="picker-d"></div>
+          <button class="add-custom-btn" onclick="addCustomItem('d')">＋ <span id="s-custom-d">Agregar concepto personalizado</span></button>
           <table class="items-table">
             <thead><tr><th id="s-desc-d">Descripción</th><th id="s-qty-d">Cant.</th><th>USD</th><th id="s-mn-d" class="mn-col">MXN</th><th></th></tr></thead>
             <tbody id="tbody-d"></tbody>
@@ -199,6 +202,7 @@ body{font-family:Arial,sans-serif;background:#f0f4f8;color:#222;font-size:14px;}
         <div class="form-section">
           <h3 id="s-items-c">Conceptos de la Cotización</h3>
           <div id="picker-c"></div>
+          <button class="add-custom-btn" onclick="addCustomItem('c')">＋ <span id="s-custom-c">Agregar concepto personalizado</span></button>
           <table class="items-table">
             <thead><tr><th id="s-desc-c">Descripción</th><th id="s-qty-c">Cant.</th><th>USD</th><th id="s-mn-c" class="mn-col">MXN</th><th></th></tr></thead>
             <tbody id="tbody-c"></tbody>
@@ -385,6 +389,16 @@ function buildPicker(sid){
     <input type="number" id="qty-${sid}" value="1" min="1" style="width:58px">
     <button class="add-item-btn" onclick="addFromPicker('${sid}')">${t('addBtn')}</button>
   </div>`;
+}
+
+function addCustomItem(sid){
+  items[sid].push({id:nid++,desc:'',qty:1,price:0,custom:true});
+  renderItems(sid);
+  // Focus the last description input
+  setTimeout(()=>{
+    const inputs=document.querySelectorAll('#tbody-'+sid+' tr:last-child input[type="text"]');
+    if(inputs.length)inputs[0].focus();
+  },50);
 }
 
 function addFromPicker(sid){
